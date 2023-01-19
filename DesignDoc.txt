@@ -1,0 +1,77 @@
+// =================== CS251 DEX Project =================== // 
+//                      Design Document                      //
+//            Names: Gautam Pradeep and Michael Hany Elabd   //
+// ========================================================= //  
+
+1. Explain why adding and removing liquidity to your exchange does not change the exchange rate.
+
+It does not affect the exchange because it adds an "equivalant" amount of both tokens and thus the exchange rate should remain the same. 
+It is basically like adding $10 and $10 equivalent of the other currency to the reserves. Thus, the reserves have not change in their respective
+value towards one another.
+
+2. Explain your scheme for rewarding liquidity providers and justify the design decisions you made. How does it satisfy the liquidity rewards requirements outlined in Section 7?
+We took the fractional fee from the initial deposit the user provided. Then, we utilized k to calculate the amount of the desired currency they should receive such that x*y=k.
+Afterwards, we ensured that both transactions completed smoothly, and we updated the eth_reserves and token_reserves.
+
+Requirement:
+Your pool must charge the person performing the swap some nonzero percent fee on every swap transaction
+Satisfaction:
+We used the swap fee numerator and swap fee denominator to determine the fractional fee on every transaction.
+
+Requirement:
+When a swap occurs, the value of tokens or ETH sent to the trader should be equal to (1 −p)
+times the value of the assets they are swapping, where p is the percent fee taken for liquidity
+providers.
+Satisfaction:
+We satisfied this by taking the fee from the user before the transaction occurs thus giving them the tokens they requested minus the fees. 
+
+Requirement:
+When a fee is taken during a swap, it should be distributed to the liquidity providers such
+that each provider should later be able to withdraw their original stake plus fees.
+Satisfaction:
+Every LP has a percentage in the overall pool. When fees are taken they are put into the pool.
+Thus, when each LP wants to withdraw their stake, they withdraw a percentage of the pool. 
+That percentage is drawn from the pool which contains both their original stake and the fees.3s
+Thus, each LP is able to take their original stake plus the fees.
+
+Requirement:
+Pending their withdrawal, all fees should be automatically reinvested into the pool on behalf
+of each liquidity provider
+Satisfaction:
+We reinvest the fees by adding them to the overall reserves and thus each user has a percentage access to any new fee that was made.
+
+
+Requirement:
+While deciding between different design options, we encourage you to opt for the solution that
+minimizes gas costs
+Satisfaction:
+Minimized gas through deciding on decreasing the number of transactions happening (rather than sending a transaction for the fee, we just give 
+the user a smaller sum of the money instead of giving them and taking away from them).
+
+
+
+3. Describe at least one method you used to minimize your exchange contract's gas usage. Why was this method effective?
+
+Instead of calculating the total amount of eth the lps had put in the reserve, we instead kept a running sum that we increased and decreased
+accordingly. 
+We combined two seperate for-loops one for checking that the user is an LP and the other for updating the LPs stakes into one for loop where 
+we are able to check for both situations and also update the new LP's stake with their new added liquidity or their removed liquidity.
+Once an LP has no liquidity, we also remove them to prevent unneccessary looping through.
+
+
+4. Optional Feedback:
+4a. How much time did you spend on the assignment?
+
+20+ hours
+
+4b. What is one thing that would have been useful to know before starting the assignment?
+
+Clearer instructions on swap fee and slippage 
+
+4c. If you could change one with about this assignment, what would you change?
+
+Remove Swap Fee
+
+4d. Please feel free to include any other feedback you may have below.
+
+N/A
